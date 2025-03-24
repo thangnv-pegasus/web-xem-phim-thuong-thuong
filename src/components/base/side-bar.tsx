@@ -21,7 +21,7 @@ const menuLists = [
   },
   {
     path: `${publicRoutes.films}?type=${NAV_LINK.CINEMA_FILMS}`,
-    label: "Phim chiếu rạp",
+    label: "Phim đang chiếu",
   },
 ];
 
