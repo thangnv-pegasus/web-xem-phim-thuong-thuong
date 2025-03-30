@@ -2,9 +2,11 @@ import { Swiper, SwiperSlide } from "swiper/react";
 import "swiper/css";
 import "swiper/css/navigation";
 import "swiper/css/pagination";
-import { Navigation, Pagination } from "swiper/modules";
+import { Navigation } from "swiper/modules";
 import { IFilm } from "../../types";
 import Film from "./film-item";
+import { Suspense } from "react";
+import SkeletonFilm from "../base/film-skeleton";
 
 interface IProps {
   films: IFilm[];
@@ -31,7 +33,9 @@ export default function FilmSlider({
       >
         {films.map((item, index) => (
           <SwiperSlide key={`film-slide-${index}`}>
-            <Film film={item} />
+            <Suspense fallback={<SkeletonFilm />}>
+              <Film film={item} />
+            </Suspense>
           </SwiperSlide>
         ))}
       </Swiper>

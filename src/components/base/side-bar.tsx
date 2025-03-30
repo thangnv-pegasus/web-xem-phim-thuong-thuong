@@ -1,29 +1,24 @@
 import { NavLink, useLocation } from "react-router";
 import { publicRoutes } from "../../config/router";
 import { NAV_LINK } from "../../constants/page";
+import MenuDropdown from "../ui/menu-dropdown";
 
 const menuLists = [
   {
     path: publicRoutes.home,
     label: "Trang chủ",
-  },
-  {
-    path: `${publicRoutes.films}?type=${NAV_LINK.NEW_FILMS}`,
-    label: "Phim mới",
-  },
-  {
-    path: `${publicRoutes.films}?type=${NAV_LINK.FEATURE_FILMS}`,
-    label: "Phim lẻ",
-  },
-  {
-    path: `${publicRoutes.films}?type=${NAV_LINK.DRAMA_FILMS}`,
-    label: "Phim bộ",
-  },
-  {
-    path: `${publicRoutes.films}?type=${NAV_LINK.CINEMA_FILMS}`,
-    label: "Phim đang chiếu",
-  },
+    child: null
+  }
 ];
+
+for (const key in NAV_LINK) {
+  menuLists.push({
+    path: `${publicRoutes.films}?type=${NAV_LINK[key].slug}`,
+    label: NAV_LINK[key].title,
+    child: NAV_LINK[key].child ?? null
+  })
+}
+console.log('>> >check menu lists >>> ', menuLists)
 
 export default function SideBar() {
   const location = useLocation();
@@ -32,6 +27,12 @@ export default function SideBar() {
     <div className="bg-[#2d2d2d] text-white">
       <div className="w-320 mx-auto flex items-stretch">
         {menuLists.map((item, index) => {
+          if(item.child) {
+            return (
+              <MenuDropdown menuItems={item.child} title={item.label} key={'menu dropdown'}/>
+            );
+          }
+
           return (
             <NavLink
               to={item.path}
@@ -47,6 +48,7 @@ export default function SideBar() {
             </NavLink>
           );
         })}
+        
       </div>
     </div>
   );

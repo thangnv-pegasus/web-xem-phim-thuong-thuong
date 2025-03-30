@@ -23,8 +23,10 @@ export default function HomePage() {
         {newFilms && <FilmSlider films={newFilms} perView={5}/>}
       </section>
 
-      <section>
-        
+      <section className="flex">
+        <div>
+
+        </div>
       </section>
     </div>
   );

@@ -28,3 +28,12 @@ export interface IBaseReponse<T> {
   paginate: IPaginate;
   items: T
 }
+
+export interface IBaseLink {
+  title: string
+  slug: string
+}
+
+export interface ILinkLoop extends IBaseLink {
+  child: IBaseLink
+}
