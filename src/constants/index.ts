@@ -1,5 +1,5 @@
 import { publicRoutes } from "../config/router"
-import { IBaseLink, ILinkLoop } from "../types"
+import { ILinkLoop } from "../types"
 
 export const convertObjectToArrayNavLink = (objectArr: any) => {
   const arr = []
