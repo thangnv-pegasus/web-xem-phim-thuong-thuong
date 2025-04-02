@@ -1,55 +1,26 @@
-import { NavLink, useLocation } from "react-router";
-import { publicRoutes } from "../../config/router";
-import { NAV_LINK } from "../../constants/page";
-import MenuDropdown from "../ui/menu-dropdown";
+import { Box } from '@chakra-ui/react';
+import { IFilm } from '../../types';
+import { twMerge } from 'tailwind-merge';
+import FilmItemList from '../ui/film-item-list';
+import { v4 as uuid } from 'uuid';
 
-const menuLists = [
-  {
-    path: publicRoutes.home,
-    label: "Trang chủ",
-    child: null
-  }
-];
-
-for (const key in NAV_LINK) {
-  menuLists.push({
-    path: `${publicRoutes.films}?type=${NAV_LINK[key].slug}`,
-    label: NAV_LINK[key].title,
-    child: NAV_LINK[key].child ?? null
-  })
+interface IProps {
+  title: string;
+  className?: string;
+  films: IFilm[];
 }
-console.log('>> >check menu lists >>> ', menuLists)
 
-export default function SideBar() {
-  const location = useLocation();
-
+export default function SideBar({ title, className = '', films }: IProps) {
   return (
-    <div className="bg-[#2d2d2d] text-white">
-      <div className="w-320 mx-auto flex items-stretch">
-        {menuLists.map((item, index) => {
-          if(item.child) {
-            return (
-              <MenuDropdown menuItems={item.child} title={item.label} key={'menu dropdown'}/>
-            );
-          }
-
-          return (
-            <NavLink
-              to={item.path}
-              key={`navlink${index}`}
-              className={
-                "h-15 block leading-15 px-4 font-medium " +
-                (location.pathname + (location.search ?? "") === item.path
-                  ? "text-orange-500"
-                  : "text-white")
-              }
-            >
-              {item.label}
-            </NavLink>
-          );
+    <Box className={twMerge('', className)}>
+      <h2 className="uppercase text-primary text-2xl py-4 font-medium border-b-2 border-dashed border-primary tracking-widest">
+        {title}
+      </h2>
+      <Box className='py-5'>
+        {films.map((film, index) => {
+          return <FilmItemList film={film} position={index + 1} key={uuid()} />;
         })}
-        
-      </div>
-    </div>
+      </Box>
+    </Box>
   );
 }

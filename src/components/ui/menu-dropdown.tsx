@@ -13,7 +13,6 @@ export default function MenuDropdown({
   title = "Menu Title",
   menuItems = [],
 }: IProps) {
-  console.log('>>> check menu items >>> ', menuItems)
   return (
     <Menu.Root positioning={{ placement: "bottom-end" }}>
       <Menu.Trigger asChild>

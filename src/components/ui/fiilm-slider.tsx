@@ -4,7 +4,7 @@ import "swiper/css/navigation";
 import "swiper/css/pagination";
 import { Navigation } from "swiper/modules";
 import { IFilm } from "../../types";
-import Film from "./film-item";
+import Film from "./film-item-card";
 import { Suspense } from "react";
 import SkeletonFilm from "../base/film-skeleton";
 
