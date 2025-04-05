@@ -1,7 +1,7 @@
 import { Box } from '@chakra-ui/react';
-import { IFilm } from '../../types';
+import { IFilm } from '../../../types';
 import { twMerge } from 'tailwind-merge';
-import FilmItemList from '../ui/film-item-list';
+import FilmItemList from '../../ui/film-item-list';
 import { v4 as uuid } from 'uuid';
 
 interface IProps {

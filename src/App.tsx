@@ -1,6 +1,6 @@
 import { Route, Routes } from "react-router";
-import GuestLayout from "./components/base/layout";
 import { guestRouters } from "./routes";
+import GuestLayout from "./components/base/layout/layout";
 
 function App() {
   return (

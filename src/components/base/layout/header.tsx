@@ -1,6 +1,6 @@
 import { FaHeart } from "react-icons/fa";
 import { IoSearch } from "react-icons/io5";
-import { publicRoutes } from "../../config/router";
+import { publicRoutes } from "../../../config/router";
 import { MdOutlineLogin } from "react-icons/md";
 import { HiOutlineUserGroup } from "react-icons/hi";
 

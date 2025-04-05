@@ -1,22 +1,23 @@
 import { NavLink, useLocation } from "react-router";
-import { publicRoutes } from "../../config/router";
-import { NAV_LINK } from "../../constants/page";
-import MenuDropdown from "../ui/menu-dropdown";
+import { publicRoutes } from "../../../config/router";
+import { NAV_LINK } from "../../../constants/page";
+import MenuDropdown from "../../ui/menu-dropdown";
+import { v4 as uuid } from "uuid";
 
 const menuLists = [
   {
     path: publicRoutes.home,
     label: "Trang chủ",
-    child: null
-  }
+    child: null,
+  },
 ];
 
 for (const key in NAV_LINK) {
   menuLists.push({
     path: `${publicRoutes.films}?type=${NAV_LINK[key].slug}`,
     label: NAV_LINK[key].title,
-    child: NAV_LINK[key].child ?? null
-  })
+    child: NAV_LINK[key].child ?? null,
+  });
 }
 
 export default function NavBar() {
@@ -26,9 +27,13 @@ export default function NavBar() {
     <div className="bg-[#2d2d2d] text-white">
       <div className="w-320 mx-auto flex items-stretch">
         {menuLists.map((item, index) => {
-          if(item.child) {
+          if (item.child) {
             return (
-              <MenuDropdown menuItems={item.child} title={item.label} key={'menu dropdown'}/>
+              <MenuDropdown
+                menuItems={item.child}
+                title={item.label}
+                key={uuid()}
+              />
             );
           }
 
@@ -47,7 +52,6 @@ export default function NavBar() {
             </NavLink>
           );
         })}
-        
       </div>
     </div>
   );

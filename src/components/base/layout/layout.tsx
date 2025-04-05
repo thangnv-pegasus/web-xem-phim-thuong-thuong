@@ -9,7 +9,7 @@ export default function GuestLayout() {
       <Header />
       <SideBar />
       <main>
-        <Outlet /> {/* Đây là nơi các trang con sẽ được render */}
+        <Outlet /> 
       </main>
       <Footer />
     </>

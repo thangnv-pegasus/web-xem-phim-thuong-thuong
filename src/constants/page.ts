@@ -158,7 +158,19 @@ const COUNTRIES = {
   },
 };
 
-const NAV_LINK = {
+interface INavLinkItem {
+  title: string;
+  slug: string;
+  child?: {
+    path: string;
+    label: string;
+    slug: string;
+  }[];
+}
+interface INavLink {
+  [key: string]: INavLinkItem;
+}
+const NAV_LINK: INavLink = {
   NEW_FILMS: {
     title: "Phim mới",
     slug: "phim-moi",

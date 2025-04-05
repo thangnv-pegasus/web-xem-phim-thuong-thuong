@@ -6,7 +6,8 @@ export const convertObjectToArrayNavLink = (objectArr: any) => {
   for (const property in objectArr) {
     arr.push({
       path: `${publicRoutes.films}?type=${(objectArr[property] as ILinkLoop).slug}`,
-      label: (objectArr[property] as ILinkLoop).title
+      label: (objectArr[property] as ILinkLoop).title,
+      slug:  (objectArr[property] as ILinkLoop).slug
     })
   }
 
