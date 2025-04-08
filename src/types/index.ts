@@ -29,6 +29,11 @@ export interface IBaseReponse<T> {
   items: T
 }
 
+export interface IDefailFilmResponse<T>{
+  status: string;
+  movie: T
+}
+
 export interface IBaseLink {
   title: string
   slug: string
@@ -36,4 +41,41 @@ export interface IBaseLink {
 
 export interface ILinkLoop extends IBaseLink {
   child: IBaseLink
+}
+
+export interface IDetailFilm extends IFilm {
+  id: string;
+  category: ICategory;
+  episodes: IEpisodeServer[];
+}
+
+// Interface cho danh mục (category)
+interface ICategory {
+  [key: string]: ICategoryGroup;
+}
+
+interface ICategoryGroup {
+  group: {
+    id: string;
+    name: string;
+  };
+  list: ICategoryItem[];
+}
+
+interface ICategoryItem {
+  id: string;
+  name: string;
+}
+
+// Interface cho tập phim và server
+interface IEpisodeServer {
+  server_name: string;
+  items: IEpisodeItem[];
+}
+
+interface IEpisodeItem {
+  name: string;
+  slug: string;
+  embed: string;
+  m3u8: string;
 }

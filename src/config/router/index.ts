@@ -3,6 +3,7 @@ const publicRoutes = {
   about: '/about',
   detailFilm: '/films/:filmSlug',
   films: '/films',
+  watchFilm: '/films/:filmSlug/:epsodeSlug',
 }
 
 export { publicRoutes }

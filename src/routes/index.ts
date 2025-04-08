@@ -2,6 +2,7 @@ import { publicRoutes } from "../config/router"
 import AboutPage from "../pages/about"
 import FilmsPage from "../pages/films"
 import DetailFilmPage from "../pages/films/detail"
+import WatchFilm from "../pages/films/detail/watching"
 import HomePage from "../pages/home"
 
 const guestRouters = [
@@ -20,6 +21,10 @@ const guestRouters = [
   {
     path: publicRoutes.detailFilm,
     component: DetailFilmPage
+  },
+  {
+    path: publicRoutes.watchFilm,
+    component: WatchFilm
   }
 ]
 
