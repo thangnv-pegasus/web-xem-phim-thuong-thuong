@@ -3,7 +3,9 @@ const publicRoutes = {
   about: '/about',
   detailFilm: '/films/:filmSlug',
   films: '/films',
-  watchFilm: '/films/:filmSlug/:epsodeSlug',
+  watchFilm: '/films/:filmSlug/:episodeSlug',
+  search: '/films/search',
+  notFound: '/not-found',
 }
 
 export { publicRoutes }

@@ -3,7 +3,9 @@ import AboutPage from "../pages/about"
 import FilmsPage from "../pages/films"
 import DetailFilmPage from "../pages/films/detail"
 import WatchFilm from "../pages/films/detail/watching"
+import SearchPage from "../pages/films/search"
 import HomePage from "../pages/home"
+import NotFound from "../pages/not-found"
 
 const guestRouters = [
   {
@@ -25,6 +27,18 @@ const guestRouters = [
   {
     path: publicRoutes.watchFilm,
     component: WatchFilm
+  },
+  {
+    path: publicRoutes.search,
+    component: SearchPage
+  },
+  {
+    path: publicRoutes.notFound,
+    component: NotFound
+  },
+  {
+    path: '*',
+    component: NotFound
   }
 ]
 

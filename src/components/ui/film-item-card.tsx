@@ -2,6 +2,7 @@ import { twMerge } from "tailwind-merge";
 import { IFilm } from "../../types";
 import { Link } from "react-router";
 import { publicRoutes } from "../../config/router";
+import { Box } from "@chakra-ui/react";
 
 export default function Film({
   film,
@@ -11,7 +12,7 @@ export default function Film({
   className?: string;
 }) {
   return (
-    <article className={twMerge(`h-66 w-full relative`, className)}>
+    <Box as={'article'} className={twMerge(`h-66 w-full relative rounded-sm overflow-hidden`, className)}>
       <figure className="absolute top-0 left-0 right-0 bottom-0">
         <img
           src={film.poster_url}
@@ -37,6 +38,6 @@ export default function Film({
           {film.original_name}
         </p>
       </div>
-    </article>
+    </Box>
   );
 }

@@ -22,7 +22,8 @@ const API_PATH = {
     `/films/quoc-gia/${slug}?page=${page}`,
   GET_FILMS_BY_YEAR: (slug: string, page = 1) =>
     `/films/nam-phat-hanh/${slug}?page=${page}`,
-  GET_FILMS_BY_KEYWORDS: (slug = "") => `/films/search?keyword=${slug}`,
+  GET_FILMS_BY_KEYWORDS: (slug = "", page = 1) =>
+    `/films/search?keyword=${slug}&page=${page}`,
 };
 
 export const getNewFilms = async (page = 1): Promise<IBaseReponse<IFilm[]>> => {
@@ -62,6 +63,15 @@ export const getDetailFilm = async (
   slug: string
 ): Promise<IDefailFilmResponse<IDetailFilm>> => {
   const { data } = await http(API_PATH.GET_DETAIL_FILM(slug));
+
+  return data;
+};
+
+export const getFilmsByKeyword = async (
+  keyword: string,
+  page = 1
+): Promise<IBaseReponse<IFilm[]>> => {
+  const { data } = await http(API_PATH.GET_FILMS_BY_KEYWORDS(keyword, page));
 
   return data;
 };
