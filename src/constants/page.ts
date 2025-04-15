@@ -159,7 +159,8 @@ const COUNTRIES = {
 };
 
 interface INavLinkItem {
-  title: string;
+  title?: string;
+  label?: string;
   slug: string;
   child?: {
     path: string;

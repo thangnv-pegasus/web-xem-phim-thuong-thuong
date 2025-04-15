@@ -9,7 +9,7 @@ import { v4 as uuid } from 'uuid';
 import BasePagination from '../../../components/base/pagination';
 
 export default function SearchPage() {
-  const [params, setParams] = useSearchParams();
+  const [params, _setSearchParams] = useSearchParams();
   const [filmsByYear, setFilmsByYear] = useState<IFilm[]>([]);
   const [films, setFilms] = useState<IFilm[]>([]);
   const [page, setPage] = useState(1);

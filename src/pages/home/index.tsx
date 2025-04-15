@@ -81,28 +81,28 @@ export default function HomePage() {
           {dramaFilms && (
             <GridItems
               films={dramaFilms}
-              title={NAV_LINK.DRAMA_FILMS.title}
+              title={NAV_LINK.DRAMA_FILMS.title ?? "Phim bộ"}
               path={`${publicRoutes.films}?type=${NAV_LINK.DRAMA_FILMS.slug}`}
             />
           )}
           {featureFilms && (
             <GridItems
               films={featureFilms}
-              title={NAV_LINK.FEATURE_FILMS.title}
+              title={NAV_LINK.FEATURE_FILMS.title ?? "Phim lẻ"}
               path={`${publicRoutes.films}?type=${NAV_LINK.FEATURE_FILMS.slug}`}
             />
           )}
           {showingFilms && (
             <GridItems
               films={showingFilms}
-              title={NAV_LINK.CINEMA_FILMS.title}
+              title={NAV_LINK.CINEMA_FILMS.title ?? "Phim đang chiếu"}
               path={`${publicRoutes.films}?type=${NAV_LINK.CINEMA_FILMS.slug}`}
             />
           )}
           {tvShowFilms && (
             <GridItems
               films={tvShowFilms}
-              title={NAV_LINK.TV_SHOWS.title}
+              title={NAV_LINK.TV_SHOWS.title ?? 'TV Shows'}
               path={`${publicRoutes.films}?type=${NAV_LINK.TV_SHOWS.slug}`}
             />
           )}

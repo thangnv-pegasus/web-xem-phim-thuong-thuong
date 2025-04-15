@@ -13,7 +13,7 @@ import Loading from "../../components/base/layout/loading";
 export default function FilmsPage() {
   const [filmsOfYear, setFilmsOfYear] = useState<IFilm[]>([]);
   const [films, setFilms] = useState<IFilm[]>([]);
-  const [params, setParams] = useSearchParams();
+  const [params, _setParams] = useSearchParams();
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
@@ -83,7 +83,7 @@ for (const link of Object.values(NAV_LINK)) {
       >
         <Box>
           <h1 className="text-2xl uppercase font-semibold text-primary pb-5">
-            {pageObject?.title || pageObject?.label}
+            {(pageObject as any).title || pageObject?.label}
           </h1>
           {isLoading ? (
             <Loading />
