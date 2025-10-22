@@ -1,3 +1,5 @@
+import { string } from "zod";
+
 export interface IFilm {
   name: string;
   slug: string;
@@ -15,6 +17,23 @@ export interface IFilm {
   casts: string | null;
 }
 
+export interface IFilmDetail extends IFilm {
+  episodes: {
+    id: number;
+    name: string;
+    url: string;
+  }[];
+  country: any;
+  filmCategories: {
+    id: true;
+    category: {
+      name: string;
+      id: number;
+      slug: string;
+    }
+  }[]
+}
+
 export interface IPaginate {
   page: number;
   total: number;
@@ -27,7 +46,7 @@ export interface IBaseReponse<T> {
   data: T
 }
 
-export interface IDefailFilmResponse<T>{
+export interface IDefailFilmResponse<T> {
   status: string;
   movie: T
 }

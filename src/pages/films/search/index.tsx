@@ -2,7 +2,7 @@ import { Box, Grid, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { IFilm } from '../../../types';
-import { getFilmsByKeyword, getFilmsByYear } from '../../../services';
+import { getFilmsByKeyword } from '../../../services';
 import SideBar from '../../../components/base/layout/side-bar';
 import Film from '../../../components/ui/film-item-card';
 import { v4 as uuid } from 'uuid';
@@ -16,14 +16,14 @@ export default function SearchPage() {
   const [totalPage, setTotalPage] = useState(1);
 
   const fetchFilms = async () => {
-    const res = await getFilmsByKeyword(params.get('keyword') ?? '', page);
-    setFilms(res.items);
-    setTotalPage(res.paginate.total_page);
+    // const res = await getFilmsByKeyword(params.get('keyword') ?? '', page);
+    // setFilms(res.items);
+    // setTotalPage(res.paginate.total_page);
   };
 
   const fetchFilmsByYear = async () => {
-    const res = await getFilmsByYear('2024', 1);
-    setFilmsByYear(res.items);
+    // const res = await getFilmsByYear('2024', 1);
+    // setFilmsByYear(res.items);
   };
 
   useEffect(() => {

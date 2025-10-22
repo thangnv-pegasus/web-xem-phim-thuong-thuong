@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { getFilmByGenre, getFilmsByYear, getFilmSeries, getFilmsSuggest, getSingleFilms } from "../../services";
+import { getFilmByGenre, getFilmSeries, getFilmsSuggest, getFilmTrending, getSingleFilms } from "../../services";
 import { IFilm } from "../../types";
 import FilmSlider from "../../components/ui/fiilm-slider";
 import GridItems from "../../components/ui/grid-items";
@@ -12,9 +12,9 @@ export default function HomePage() {
   const [newFilms, setNewFilms] = useState<IFilm[]>();
   const [filmSeries, setFilmSeries] = useState<IFilm[]>();
   const [featureFilms, setFeatureFilms] = useState<IFilm[]>();
-  const [showingFilms, setShowingFilms] = useState<IFilm[]>();
-  const [tvShowFilms, setTvShowFilms] = useState<IFilm[]>();
-  const [filmsOfYear, setFilmsOfYear] = useState<IFilm[]>();
+  const [actionFilm, setActionFilm] = useState<IFilm[]>();
+  const [dangerFilm, setDangerFilm] = useState<IFilm[]>();
+  const [filmTrending, setFilmTrending] = useState<IFilm[]>();
 
   const fetchFilmSuggest = async () => {
     const films = await getFilmsSuggest(); 
@@ -23,29 +23,32 @@ export default function HomePage() {
 
   const fetchFilmSeries = async () => {
     const films = await getFilmSeries(1);
-    console.log('>>> films >>> ', films)
+
     setFilmSeries(films.data);
   };
 
   const fetchSingleFilm = async () => {
     const films = await getSingleFilms(1);
+    
     setFeatureFilms(films.data);
   };
 
-  const getShowingFilms = async () => {
-    const films = await getFilmByGenre(NAV_LINK.CINEMA_FILMS.slug, 1);
-    setShowingFilms(films.data);
+  const getFilmsAction = async () => {
+    const films = await getFilmByGenre('hanh-dong', 1);
+
+    setActionFilm(films.data);
   };
 
-  const getTvShowFilms = async () => {
-    const films = await getFilmByGenre(NAV_LINK.TV_SHOWS.slug, 1);
-    setTvShowFilms(films.data);
+  const getDangerFilm = async () => {
+    const films = await getFilmByGenre('kinh-di', 1);
+
+    setDangerFilm(films.data);
   };
 
-  const fetchFilmsByYear = async () => {
-    const films = await getFilmsByYear("2024", 1);
+  const fetchFilmTrending = async () => {
+    const films = await getFilmTrending(1);
 
-    setFilmsOfYear(films.data);
+    setFilmTrending(films.data);
   };
 
   useEffect(() => {
@@ -53,9 +56,9 @@ export default function HomePage() {
       fetchFilmSuggest(),
       fetchFilmSeries(),
       fetchSingleFilm(),
-      // getShowingFilms(),
-      // getTvShowFilms(),
-      // fetchFilmsByYear(),
+      getFilmsAction(),
+      getDangerFilm(),
+      fetchFilmTrending(),
     ]);
   }, []);
 
@@ -92,24 +95,24 @@ export default function HomePage() {
               path={`${publicRoutes.films}?type=${NAV_LINK.FEATURE_FILMS.slug}`}
             />
           )}
-          {showingFilms && (
+          {actionFilm && (
             <GridItems
-              films={showingFilms}
-              title={NAV_LINK.CINEMA_FILMS.title ?? "Phim đang chiếu"}
-              path={`${publicRoutes.films}?type=${NAV_LINK.CINEMA_FILMS.slug}`}
+              films={actionFilm}
+              title="Phim hành động"
+              path={`${publicRoutes.films}?type=hanh-dong`}
             />
           )}
-          {tvShowFilms && (
+          {dangerFilm && (
             <GridItems
-              films={tvShowFilms}
-              title={NAV_LINK.TV_SHOWS.title ?? 'TV Shows'}
-              path={`${publicRoutes.films}?type=${NAV_LINK.TV_SHOWS.slug}`}
+              films={dangerFilm}
+              title='Phim kinh dị'
+              path={`${publicRoutes.films}?type=kinh-di`}
             />
           )}
         </Box>
-        {filmsOfYear && (
+        {filmTrending && (
           <SideBar
-            films={filmsOfYear}
+            films={filmTrending}
             title="Trending"
           />
         )}

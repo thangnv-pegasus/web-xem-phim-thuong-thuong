@@ -2,18 +2,22 @@ import { Box, Grid, Text } from '@chakra-ui/react';
 import { Link, useParams } from 'react-router';
 import { getDetailFilm } from '../../../../services';
 import { useEffect, useState } from 'react';
-import { IDetailFilm } from '../../../../types';
+import { IFilmDetail } from '../../../../types';
 import { twMerge } from 'tailwind-merge';
 
 export default function WatchFilm() {
-  const [film, setFilm] = useState<IDetailFilm>();
+  const [film, setFilm] = useState<IFilmDetail>();
   const paths = useParams();
+  console.log('>>> paths >>> ', paths)
 
   const fetchDetailFilm = async () => {
     const res = await getDetailFilm(paths.filmSlug ?? '');
     // console.log('>>> res >>> ', res);
-    setFilm(res.movie);
+    setFilm(res);
   };
+  console.log('>>> film >>> ',film?.episodes.find(
+                  (item) => item.id == Number(paths.episodeId)
+                )?.url)
 
   useEffect(() => {
     fetchDetailFilm();
@@ -32,9 +36,9 @@ export default function WatchFilm() {
           {film && (
             <iframe
               src={
-                film?.episodes[0].items.find(
-                  (item) => item.slug == paths.episodeSlug
-                )?.embed
+                film?.episodes.find(
+                  (item) => item.id == Number(paths.episodeId)
+                )?.url
               }
               className="w-full h-full"
             />
@@ -49,14 +53,14 @@ export default function WatchFilm() {
             gap={4}
             className="mt-4"
           >
-            {film?.episodes[0].items.map((item, index) => {
+            {film?.episodes.map((item, index) => {
               return (
                 <Link
-                  to={`/films/${paths.filmSlug}/${item.slug}`}
+                  to={`/films/${paths.filmSlug}/${item.id}`}
                   key={index}
                   className={twMerge(
                     'p-2 bg-white text-black rounded-md text-center text-sm block',
-                    item.slug == paths.episodeSlug
+                    item.id == Number(paths.episodeId)
                       ? 'bg-[#dd003f] text-white'
                       : ''
                   )}
@@ -71,8 +75,8 @@ export default function WatchFilm() {
           <Text className="text-primary uppercase text-xl font-semibold">
             {film?.name} - Tập{' '}
             {
-              film?.episodes[0].items.find(
-                (item) => item.slug === paths.episodeSlug
+              film?.episodes.find(
+                (item) => item.id == Number(paths.episodeId)
               )?.name
             }
           </Text>

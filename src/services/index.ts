@@ -4,6 +4,7 @@ import {
   IDefailFilmResponse,
   IDetailFilm,
   IFilm,
+  IFilmDetail,
 } from "../types";
 
 const API_PATH = {
@@ -53,11 +54,11 @@ export const getFilmByGenre = async (
   return data;
 };
 
-export const getFilmsByYear = async (
-  year: string,
-  page = 1
+export const getFilmTrending = async (
+  page = 1,
+  limit = 10,
 ): Promise<IBaseReponse<IFilm[]>> => {
-  const { data } = await http(API_PATH.GET_FILMS_BY_YEAR(year, page));
+  const { data } = await http(`films/trending?page=${page}&limit=${limit}`);
 
   return data;
 };
@@ -73,8 +74,8 @@ export const getFilmsByCountry = async (
 
 export const getDetailFilm = async (
   slug: string
-): Promise<IDefailFilmResponse<IDetailFilm>> => {
-  const { data } = await http(API_PATH.GET_DETAIL_FILM(slug));
+): Promise<IFilmDetail> => {
+  const { data } = await http(`films/slug/${slug}`);
 
   return data;
 };

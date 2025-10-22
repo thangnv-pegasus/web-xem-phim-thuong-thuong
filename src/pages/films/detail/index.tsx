@@ -1,52 +1,52 @@
 import { Box, Button, Flex, Grid, Text } from '@chakra-ui/react';
 import SideBar from '../../../components/base/layout/side-bar';
 import { useEffect, useState } from 'react';
-import { IDetailFilm, IFilm } from '../../../types';
+import { IDetailFilm, IFilm, IFilmDetail } from '../../../types';
 import {
   getDetailFilm,
   getFilmByGenre,
-  getFilmsByYear,
+  getFilmTrending,
 } from '../../../services';
 import { Link, useParams } from 'react-router';
 import { MdPlayCircleOutline } from 'react-icons/md';
-import slugify from 'slugify';
 import FilmSlider from '../../../components/ui/fiilm-slider';
 
 export default function DetailFilmPage() {
-  const [filmsOfYear, setFilmsOfYear] = useState<IFilm[]>([]);
-  const [filmDetail, setFilmDetail] = useState<IDetailFilm>();
+  const [filmTrending, setFilmTrending] = useState<IFilm[]>([]);
+  const [filmDetail, setFilmDetail] = useState<IFilmDetail>();
   const [filmsByGenre, setFilmsByGenre] = useState<IFilm[]>([]);
   const pathName = useParams();
 
-  const fetchFilmsByYear = async () => {
-    const films = await getFilmsByYear('2024', 1);
-    setFilmsOfYear(films.items);
-  };
+  const fetchFilmTrending = async () => {
+      const films = await getFilmTrending(1);
+  
+      setFilmTrending(films.data);
+    };
 
   const fetchDetailFilm = async () => {
     const res = await getDetailFilm(pathName.filmSlug ?? '');
-
-    setFilmDetail(res.movie);
+    if(res) {
+      setFilmDetail(res);
+    }
   };
 
+  console.log('>>> film detail >>> ', filmDetail)
+
   const getFilmCategoryString = () => {
-    return filmDetail?.category['2'].list.map((item) => item.name).join(', ');
+    return filmDetail?.filmCategories.map((item) => item.category.name).join(', ');
   };
 
   const fetchFilmsByGenre = async () => {
     const res = await getFilmByGenre(
-      slugify(filmDetail?.category[2].list[0].name ?? '', {
-        lower: true,
-        strict: true,
-      }),
+      filmDetail?.filmCategories[0].category.slug ?? 'hanh-dong',
       1
     );
 
-    setFilmsByGenre(res.items);
+    setFilmsByGenre(res.data);
   };
 
   useEffect(() => {
-    fetchFilmsByYear();
+    fetchFilmTrending();
   }, []);
 
   useEffect(() => {
@@ -68,7 +68,7 @@ export default function DetailFilmPage() {
           <Box>
             <Flex className="w-full min-h-20 bg-[#181818] p-5 gap-x-10">
               <Link
-                to={`/films/${pathName.filmSlug}/${filmDetail?.episodes[0].items[0].slug}`}
+                to={`/films/${pathName.filmSlug}/${filmDetail?.episodes[0].id}`}
                 className="block h-110 relative group"
               >
                 <img
@@ -96,18 +96,13 @@ export default function DetailFilmPage() {
                 </p>
                 <Box className="bg-[#222] min-h-20 w-full p-4 text-[#bbb] text-xs space-y-3 font-semibold">
                   <p>{`${filmDetail?.name} - ${filmDetail?.original_name}`}</p>
-                  <p>
-                    Trạng thái:{' '}
-                    <span className="bg-[#777] text-white px-3 py-0.5">
-                      {filmDetail?.current_episode}
-                    </span>
-                  </p>
+                  
                   <Text>Thời lượng: {filmDetail?.time}</Text>
                   <Text>Số tập: {filmDetail?.total_episodes}</Text>
                   <Text>Chất lượng: {filmDetail?.quality}</Text>
                   <Text>Thể loại: {getFilmCategoryString()}</Text>
-                  <Text>Đạo diễn: {filmDetail?.director}</Text>
-                  <Text>Diễn viên: {filmDetail?.casts}</Text>
+                  <Text>Đạo diễn: {filmDetail?.director || 'đang cập nhật'}</Text>
+                  <Text>Diễn viên: {filmDetail?.casts || 'đang cập nhật'}</Text>
                 </Box>
               </Box>
             </Flex>
@@ -132,7 +127,7 @@ export default function DetailFilmPage() {
               {filmsByGenre && <FilmSlider films={filmsByGenre} perView={4} />}
             </Box>
           </Box>
-          <SideBar films={filmsOfYear} title="Trendding" />
+          <SideBar films={filmTrending} title="Trending" />
         </Grid>
       </Box>
     </Box>

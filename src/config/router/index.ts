@@ -3,7 +3,7 @@ const publicRoutes = {
   about: '/about',
   detailFilm: '/films/:filmSlug',
   films: '/films',
-  watchFilm: '/films/:filmSlug/:episodeSlug',
+  watchFilm: '/films/:filmSlug/:episodeId',
   search: '/films/search',
   login: '/login',
   register: '/register',

@@ -3,7 +3,7 @@ import { Box, Grid } from "@chakra-ui/react";
 import SideBar from "../../components/base/layout/side-bar";
 import { useEffect, useState } from "react";
 import { IFilm } from "../../types";
-import { getFilmByGenre, getFilmsByYear } from "../../services";
+import { getFilmByGenre } from "../../services";
 import { v4 as uuid } from "uuid";
 import Film from "../../components/ui/film-item-card";
 import { useSearchParams } from "react-router";
@@ -33,9 +33,9 @@ for (const link of Object.values(NAV_LINK)) {
   }
 }
   const fetchFilmsByYear = async () => {
-    const films = await getFilmsByYear("2024", 1);
+    // const films = await getFilmsByYear("2024", 1);
 
-    setFilmsOfYear(films.items);
+    // setFilmsOfYear(films.items);
   };
 
   const fetchNewFilms = async () => {
@@ -46,10 +46,10 @@ for (const link of Object.values(NAV_LINK)) {
   };
 
   const fetchFilmsByGenre = async () => {
-    const films = await getFilmByGenre(params.get("type") ?? "", page);
+    // const films = await getFilmByGenre(params.get("type") ?? "", page);
 
-    setFilms(films.items);
-    setPageSize(films.paginate.total_page);
+    // setFilms(films.items);
+    // setPageSize(films.paginate.total_page);
   };
 
   useEffect(() => {
