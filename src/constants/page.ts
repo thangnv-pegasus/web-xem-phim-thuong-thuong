@@ -184,14 +184,6 @@ const NAV_LINK: INavLink = {
     title: "Phim lẻ",
     slug: "phim-le",
   },
-  CINEMA_FILMS: {
-    title: "Phim đang chiếu",
-    slug: "phim-dang-chieu",
-  },
-  TV_SHOWS: {
-    title: "TV Shows",
-    slug: "tv-shows",
-  },
   GENRES: {
     title: "Thể loại",
     slug: "the-loai",

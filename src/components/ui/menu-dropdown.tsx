@@ -14,7 +14,7 @@ export default function MenuDropdown({
   menuItems = [],
 }: IProps) {
   return (
-    <Menu.Root positioning={{ placement: "bottom-end" }}>
+    <Menu.Root positioning={{ placement: "bottom-start" }}>
       <Menu.Trigger asChild>
         <Button
           variant="outline"

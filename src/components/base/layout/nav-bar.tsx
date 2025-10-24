@@ -10,7 +10,7 @@ const menuLists = [
     path: publicRoutes.home,
     label: "Trang chủ",
     child: null,
-  },
+  }
 ];
 
 for (const key in NAV_LINK) {

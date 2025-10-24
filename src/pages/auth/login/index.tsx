@@ -14,6 +14,7 @@ import { loginService } from '../../../services/auth';
 import { redirect, useNavigate } from 'react-router';
 import { toast } from 'sonner';
 import { useEffect } from 'react';
+import { useAuth } from '../../../context/authContext';
 
 // ✅ Schema validate
 const schema = z.object({
@@ -24,33 +25,28 @@ const schema = z.object({
 type FormData = z.infer<typeof schema>;
 
 export default function LoginPage() {
-  const nav = useNavigate()
+  const nav = useNavigate();
+  const { setUser } = useAuth(); // ✅ lấy từ context
+
   const {
     register,
     handleSubmit,
     formState: { errors },
-  } = useForm<FormData>({
-    resolver: zodResolver(schema),
-  });
-  const onSubmit = async (data: FormData) => {
-    const res = await loginService(data)
+  } = useForm<FormData>({ resolver: zodResolver(schema) });
 
-    if (!!res) {
-      localStorage.setItem('access_token', res.access_token)
-      localStorage.setItem('user', JSON.stringify(res.user))
-      toast.success('Đăng nhập thành công!')
-      return nav('/')
-    }else {
-      toast.error('Thông tin đăng nhập không đúng!')
+  const onSubmit = async (data: FormData) => {
+    const res = await loginService(data);
+
+    if (res) {
+      localStorage.setItem('access_token', res.access_token);
+      localStorage.setItem('user', JSON.stringify(res.user));
+      setUser(res.user); // ✅ cập nhật state toàn app
+      toast.success('Đăng nhập thành công!');
+      return nav('/');
+    } else {
+      toast.error('Thông tin đăng nhập không đúng!');
     }
   };
-
-  useEffect(() => {
-    const token = localStorage.getItem('access_token') ?? null
-    if(!!token) {
-      nav('/')
-    }
-  })
 
   return (
     <div className="min-h-screen flex py-10 items-center justify-center bg-black text-white">
@@ -141,6 +137,7 @@ export default function LoginPage() {
             as="span"
             color="#da966e"
             _hover={{ textDecoration: 'underline', cursor: 'pointer' }}
+            onClick={() => nav('/register')}
           >
             Đăng ký
           </Text>

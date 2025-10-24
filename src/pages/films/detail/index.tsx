@@ -76,7 +76,7 @@ export default function DetailFilmPage() {
                   alt={filmDetail?.name}
                   className="w-ful h-full object-cover object-center"
                 />
-                <Button className="absolute bottom-0 left-0 right-0 bg-[#dd003f] text-white uppercase font-semibold text-xs">
+                <Button className="absolute bottom-0 left-0 right-0 bg-[#dd003f] rounded-none text-white uppercase font-semibold text-xs">
                   Xem Phim
                 </Button>
                 <Flex

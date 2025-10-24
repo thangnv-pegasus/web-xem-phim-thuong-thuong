@@ -88,3 +88,38 @@ export const getFilmsByKeyword = async (
 
   return data;
 };
+
+export const getFilmsPagination = async (page =1, limit = 10, search = ''): Promise<IBaseReponse<IFilm[]>> => {
+  try {
+    const res = await http.get(`films?page=${page}&limit=${limit}&search=${search}`)
+
+    return res.data;
+  }catch(err) {
+    console.error('>>> get films err >>> ', err)
+
+    return {
+      status: 'error',
+      data: [],
+      meta: {
+        last_page: 1,
+        page: 1,
+        total: 1
+      }
+    }
+  }
+}
+
+
+export const postFilmHistory = async (episodeId: number) => {
+  try {
+    const res = await http.post('film-history', {
+      episodeId 
+    })
+
+    return res;
+  }catch(err) {
+    console.error('>>> post history fail >>> ', err)
+
+    return null;
+  }
+}

@@ -1,9 +1,9 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
+import { useEffect, useState } from "react";
 import { Box, Grid } from "@chakra-ui/react";
 import SideBar from "../../components/base/layout/side-bar";
-import { useEffect, useState } from "react";
-import { IFilm } from "../../types";
-import { getFilmByGenre } from "../../services";
+import { IBaseReponse, IFilm } from "../../types";
+import { getFilmByGenre, getFilmSeries, getFilmsPagination, getFilmTrending, getSingleFilms } from "../../services";
 import { v4 as uuid } from "uuid";
 import Film from "../../components/ui/film-item-card";
 import { useSearchParams } from "react-router";
@@ -12,7 +12,7 @@ import BasePagination from "../../components/base/pagination";
 import Loading from "../../components/base/layout/loading";
 
 export default function FilmsPage() {
-  const [filmsOfYear, setFilmsOfYear] = useState<IFilm[]>([]);
+  const [filmTrending, setFilmTrending] = useState<IFilm[]>([]);
   const [films, setFilms] = useState<IFilm[]>([]);
   const [params, _setParams] = useSearchParams();
   const [page, setPage] = useState(1);
@@ -20,40 +20,55 @@ export default function FilmsPage() {
   const [isLoading, setIsLoading] = useState(false);
   let pageObject;
 
-for (const link of Object.values(NAV_LINK)) {
-  if (link.slug === params.get("type")) {
-    pageObject = link;
-    break;
-  }
+  for (const link of Object.values(NAV_LINK)) {
+    if (link.slug === params.get("type")) {
+      pageObject = link;
+      break;
+    }
 
-  const child = link.child?.find(item => item.slug === params.get("type"));
-  if (child) {
-    pageObject = child;
-    break;
+    const child = link.child?.find(item => item.slug === params.get("type"));
+    if (child) {
+      pageObject = child;
+      break;
+    }
   }
-}
-  const fetchFilmsByYear = async () => {
-    // const films = await getFilmsByYear("2024", 1);
+  const fetchFilmTrending = async () => {
+    const films = await getFilmTrending(1);
 
-    // setFilmsOfYear(films.items);
+    setFilmTrending(films.data);
   };
 
   const fetchNewFilms = async () => {
-    // const films = await getNewFilms(page);
+    const films = await getFilmsPagination(page, 12);
 
-    // setFilms(films.items);
-    // setPageSize(films.paginate.total_page);
+    setFilms(films.data);
+    setPageSize(films.meta.last_page);
   };
 
   const fetchFilmsByGenre = async () => {
-    // const films = await getFilmByGenre(params.get("type") ?? "", page);
-
-    // setFilms(films.items);
-    // setPageSize(films.paginate.total_page);
+    let films: IBaseReponse<IFilm[]> = {
+      data: [],
+      meta: {
+        page: 1,
+        last_page: 1,
+        total: 1,
+      },
+      status: 'error'
+    }
+    if (params.get('type') === 'phim-le') {
+      films = await getSingleFilms(page, 12)
+    } else if (params.get('type') === 'phim-bo') {
+      films = await getFilmSeries(page, 12);
+    } else {
+      films = await getFilmByGenre(params.get("type") ?? "", page);
+    }
+    console.log('>>> films >>> ', films)
+    setFilms(films.data);
+    setPageSize(films.meta.last_page);
   };
 
   useEffect(() => {
-    fetchFilmsByYear();
+    fetchFilmTrending();
   }, []);
 
   useEffect(() => {
@@ -103,13 +118,14 @@ for (const link of Object.values(NAV_LINK)) {
             </Grid>
           )}
           <BasePagination
+            className="flex justify-center"
             pageCount={pageSize}
             pageSize={page}
             setPage={setPage}
           />
         </Box>
         <SideBar
-          films={filmsOfYear}
+          films={filmTrending}
           title="trending"
           key={uuid()}
         />

@@ -17,7 +17,7 @@ export default function HomePage() {
   const [filmTrending, setFilmTrending] = useState<IFilm[]>();
 
   const fetchFilmSuggest = async () => {
-    const films = await getFilmsSuggest(); 
+    const films = await getFilmsSuggest();
     setNewFilms(films);
   };
 
@@ -29,7 +29,7 @@ export default function HomePage() {
 
   const fetchSingleFilm = async () => {
     const films = await getSingleFilms(1);
-    
+
     setFeatureFilms(films.data);
   };
 

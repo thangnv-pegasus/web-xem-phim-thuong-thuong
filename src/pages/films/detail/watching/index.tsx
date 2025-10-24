@@ -1,24 +1,28 @@
 import { Box, Grid, Text } from '@chakra-ui/react';
 import { Link, useParams } from 'react-router';
-import { getDetailFilm } from '../../../../services';
+import { getDetailFilm, postFilmHistory } from '../../../../services';
 import { useEffect, useState } from 'react';
 import { IFilmDetail } from '../../../../types';
 import { twMerge } from 'tailwind-merge';
+import { useAuth } from '../../../../context/authContext';
 
 export default function WatchFilm() {
   const [film, setFilm] = useState<IFilmDetail>();
   const paths = useParams();
-  console.log('>>> paths >>> ', paths)
+  const {user} = useAuth()
 
   const fetchDetailFilm = async () => {
     const res = await getDetailFilm(paths.filmSlug ?? '');
     // console.log('>>> res >>> ', res);
     setFilm(res);
   };
-  console.log('>>> film >>> ',film?.episodes.find(
-                  (item) => item.id == Number(paths.episodeId)
-                )?.url)
 
+  const createHistoryUser = async () => {
+    if (!!paths.episodeId && !!user) {
+      const res = await postFilmHistory(+paths.episodeId)
+      console.log('>> res >> ', res)
+    }
+  }
   useEffect(() => {
     fetchDetailFilm();
   }, [paths.filmSlug]);
@@ -32,7 +36,7 @@ export default function WatchFilm() {
   return (
     <Box className="min-h-screen">
       <Box className="w-320 mx-auto py-10">
-        <Box className="h-130 w-full">
+        <Box className="h-130 w-full" onClick={async () => await createHistoryUser()}>
           {film && (
             <iframe
               src={
@@ -86,7 +90,7 @@ export default function WatchFilm() {
             dangerouslySetInnerHTML={{
               __html: film?.description ?? '',
             }}
-             className="text-[#abb7c4] leading-6"
+            className="text-[#abb7c4] leading-6"
           />
         </Box>
       </Box>

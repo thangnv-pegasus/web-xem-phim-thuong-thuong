@@ -20,7 +20,7 @@ export default function BasePagination({
   return (
     <Pagination.Root
       count={pageCount}
-      pageSize={pageSize}
+      // pageSize={pageSize}
       defaultPage={defaultPage}
       className={twMerge("py-5 text-right", className)}
       onPageChange={(e) => setPage(e.page)}

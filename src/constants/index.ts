@@ -13,3 +13,8 @@ export const convertObjectToArrayNavLink = (objectArr: any) => {
 
   return arr
 }
+
+export const ROLE = {
+  USER: 0,
+  ADMIN: 1,
+}

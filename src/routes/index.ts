@@ -8,6 +8,7 @@ import WatchFilm from "../pages/films/detail/watching"
 import SearchPage from "../pages/films/search"
 import HomePage from "../pages/home"
 import NotFound from "../pages/not-found"
+import UserProfilePage from "../pages/user/profile"
 
 const guestRouters = [
   {
@@ -45,6 +46,10 @@ const guestRouters = [
   {
     path: publicRoutes.register,
     component: RegisterPage
+  },
+  {
+    path: publicRoutes.user,
+    component: UserProfilePage
   },
   {
     path: '*',

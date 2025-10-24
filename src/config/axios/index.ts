@@ -3,7 +3,7 @@ import { API_URL } from "../api";
 
 export const http = axios.create({
   baseURL: API_URL,
-  timeout: 5000,
+  timeout: 25000,
 });
 
 // Add a request interceptor
