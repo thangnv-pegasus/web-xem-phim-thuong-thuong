@@ -17,19 +17,56 @@ import {
   TabsIndicator,
   TabsContent,
 } from '@chakra-ui/react';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import dayjs from 'dayjs';
+import { updateUser } from '../../../services/auth';
+import { toast } from 'sonner';
+import { useAuth } from '../../../context/authContext';
+import { useNavigate } from 'react-router';
+import { IFilmHistory } from '../../../types/history';
+import { getFilmHistories } from '../../../services/films';
+import BasePagination from '../../../components/base/pagination';
 
 export default function UserProfilePage() {
-  const user = JSON.parse(localStorage.getItem('user') || '{}');
-  const [name, setName] = useState(user?.name || '');
-  const [email, setEmail] = useState(user?.email || '');
+  const userData = JSON.parse(localStorage.getItem('user') || '{}');
+  const { user, setUser } = useAuth();
+  const [name, setName] = useState(userData?.name || '');
+  const [email, setEmail] = useState(userData?.email || '');
+  const [histories, setHistories] = useState<IFilmHistory[]>([])
+  const [page, setPage] = useState(1)
+  const [lastPage, setLastPage] = useState(1)
+  const nav = useNavigate()
 
-  const watchHistory = [
-    { id: 1, title: 'One Piece', episode: 'Tập 1080', watchedAt: '2025-10-23 19:30' },
-    { id: 2, title: 'Attack on Titan', episode: 'Tập 12', watchedAt: '2025-10-22 22:00' },
-    { id: 3, title: 'Demon Slayer', episode: 'Tập 5', watchedAt: '2025-10-20 21:10' },
-  ];
+  const updateUserInfo = async () => {
+    try {
+      const newData = await updateUser({ name })
+
+      localStorage.setItem('user', JSON.stringify(newData))
+      setUser(newData)
+      toast.success('Cập nhật thông tin thành công!')
+    } catch (err) {
+      toast.error('Cập nhật thông tin thất bại!')
+    }
+  }
+
+  const fetchFilmHistories = async () => {
+    const res = await getFilmHistories(page, 12)
+
+    console.log('>>> res >>> ', res)
+    setHistories(res.data)
+    setLastPage(res.meta.last_page)
+    setPage(res.meta.page)
+  }
+
+  useEffect(() => {
+    if (!user) {
+      nav('/')
+    }
+  }, [user])
+
+  useEffect(() => {
+    fetchFilmHistories()
+  }, [])
 
   return (
     <Box className="min-h-screen bg-black text-white flex justify-center py-10 px-4">
@@ -56,17 +93,17 @@ export default function UserProfilePage() {
             <VStack align="start">
               <Box className="flex items-center gap-4">
                 <Avatar.Root className="w-20 h-20 border-2 border-[#da966e]">
-                  {user?.avatar ? (
-                    <Avatar.Image src={user.avatar} alt={user.name} />
+                  {userData?.avatar ? (
+                    <Avatar.Image src={userData.avatar} alt={userData.name} />
                   ) : (
                     <Avatar.Fallback className="bg-[#2a2a2a] text-white text-lg font-semibold">
-                      {user?.name ? user.name[0].toUpperCase() : 'K'}
+                      {userData?.name ? userData.name[0].toUpperCase() : 'K'}
                     </Avatar.Fallback>
                   )}
                 </Avatar.Root>
                 <Box>
-                  <Text className="text-lg font-semibold">{user?.name || 'Khách'}</Text>
-                  <Text className="text-gray-400">{user?.email || 'Chưa có email'}</Text>
+                  <Text className="text-lg font-semibold">{userData?.name || 'Khách'}</Text>
+                  <Text className="text-gray-400">{userData?.email || 'Chưa có email'}</Text>
                 </Box>
               </Box>
 
@@ -102,6 +139,7 @@ export default function UserProfilePage() {
                   _hover={{ bg: '#c5845d' }}
                   _active={{ bg: '#b6744f' }}
                   className="rounded-xl font-medium"
+                  onClick={() => updateUserInfo()}
                 >
                   Cập nhật thông tin
                 </Button>
@@ -122,19 +160,20 @@ export default function UserProfilePage() {
                   </TableRow>
                 </TableHeader>
                 <TableBody>
-                  {watchHistory.map((item, index) => (
+                  {histories.map((item, index) => (
                     <TableRow key={item.id} className="border-b border-[#2c2c2c] hover:bg-[#222] transition">
                       <TableCell>{index + 1}</TableCell>
-                      <TableCell className="font-medium">{item.title}</TableCell>
-                      <TableCell>{item.episode}</TableCell>
+                      <TableCell className="font-medium">{item.episode.film.name}</TableCell>
+                      <TableCell>{item.episode.name}</TableCell>
                       <TableCell className="text-right text-gray-400">
-                        {dayjs(item.watchedAt).format('DD/MM/YYYY HH:mm')}
+                        {dayjs(item.created_at).format('DD/MM/YYYY HH:mm')}
                       </TableCell>
                     </TableRow>
                   ))}
                 </TableBody>
               </Table.Root>
             </Box>
+            {lastPage && <BasePagination setPage={setPage} pageCount={lastPage} pageSize={12} />}
           </TabsContent>
         </Tabs.Root>
       </Box>

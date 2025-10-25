@@ -8,6 +8,7 @@ import { useAuth } from '../../../../context/authContext';
 
 export default function WatchFilm() {
   const [film, setFilm] = useState<IFilmDetail>();
+  const [isHistoried, setIsHistoried] = useState(false)
   const paths = useParams();
   const {user} = useAuth()
 
@@ -21,6 +22,7 @@ export default function WatchFilm() {
     if (!!paths.episodeId && !!user) {
       const res = await postFilmHistory(+paths.episodeId)
       console.log('>> res >> ', res)
+      setIsHistoried(true)
     }
   }
   useEffect(() => {
@@ -32,11 +34,12 @@ export default function WatchFilm() {
       top: 0,
       behavior: 'smooth'
     })
+    setIsHistoried(false)
   }, [film])
   return (
     <Box className="min-h-screen">
       <Box className="w-320 mx-auto py-10">
-        <Box className="h-130 w-full" onClick={async () => await createHistoryUser()}>
+        <Box className="h-130 w-full">
           {film && (
             <iframe
               src={
@@ -45,6 +48,7 @@ export default function WatchFilm() {
                 )?.url
               }
               className="w-full h-full"
+              onLoad={async () => !isHistoried && await createHistoryUser()}
             />
           )}
         </Box>

@@ -1,6 +1,6 @@
 import { http } from "../../config/axios";
 
-export const loginService = async ({email, password}: {email: string; password: string}) => {
+export const loginService = async ({ email, password }: { email: string; password: string }) => {
   try {
     const res = await http.post('auth/login', {
       email,
@@ -8,14 +8,14 @@ export const loginService = async ({email, password}: {email: string; password: 
     })
 
     return res.data
-  }catch(err) {
+  } catch (err) {
     console.error('>>> login err >>> ', err)
 
     return null;
   }
 }
 
-export const registerService = async ({email, password, confirm_password, name, role}: {email: string; password: string, confirm_password: string, name: string, role: number}) => {
+export const registerService = async ({ email, password, confirm_password, name, role }: { email: string; password: string, confirm_password: string, name: string, role: number }) => {
   try {
     const res = await http.post('auth/register', {
       email,
@@ -26,7 +26,7 @@ export const registerService = async ({email, password, confirm_password, name, 
     })
 
     return res.data
-  }catch(err) {
+  } catch (err) {
     console.error('>>> login err >>> ', err)
 
     return err;
@@ -35,4 +35,15 @@ export const registerService = async ({email, password, confirm_password, name, 
 
 export async function logoutService() {
   return await http.post('auth/logout')
+}
+
+export async function updateUser(payload: any) {
+  const user = JSON.parse(localStorage.getItem('user') || '')
+  if (!!user) {
+    const res = await http.patch(`users/${user.id}`, payload)
+
+    return res.data
+  }
+
+  return null;
 }

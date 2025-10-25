@@ -2,7 +2,7 @@ import { Box, Grid, Text } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useSearchParams } from 'react-router';
 import { IFilm } from '../../../types';
-import { getFilmsByKeyword } from '../../../services';
+import { getFilmsPagination, getFilmsSuggest } from '../../../services';
 import SideBar from '../../../components/base/layout/side-bar';
 import Film from '../../../components/ui/film-item-card';
 import { v4 as uuid } from 'uuid';
@@ -10,24 +10,24 @@ import BasePagination from '../../../components/base/pagination';
 
 export default function SearchPage() {
   const [params, _setSearchParams] = useSearchParams();
-  const [filmsByYear, setFilmsByYear] = useState<IFilm[]>([]);
+  const [filmSuggest, setFilmSuggest] = useState<IFilm[]>([]);
   const [films, setFilms] = useState<IFilm[]>([]);
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
 
   const fetchFilms = async () => {
-    // const res = await getFilmsByKeyword(params.get('keyword') ?? '', page);
-    // setFilms(res.items);
-    // setTotalPage(res.paginate.total_page);
+    const res = await getFilmsPagination( page, 12, params.get('keyword') ?? '');
+    setFilms(res.data);
+    setTotalPage(res.meta.last_page);
   };
 
-  const fetchFilmsByYear = async () => {
-    // const res = await getFilmsByYear('2024', 1);
-    // setFilmsByYear(res.items);
+  const fetchFilmSuggest = async () => {
+    const res = await getFilmsSuggest();
+    setFilmSuggest(res);
   };
 
   useEffect(() => {
-    fetchFilmsByYear();
+    fetchFilmSuggest();
   }, []);
 
   useEffect(() => {
@@ -66,6 +66,7 @@ export default function SearchPage() {
                     setPage={setPage}
                     defaultPage={1}
                     pageSize={10}
+                    className='flex justify-center'
                   />
                 </>
               ) : (
@@ -73,7 +74,7 @@ export default function SearchPage() {
               )}
             </Box>
 
-            <SideBar films={filmsByYear} title="Trending" />
+            <SideBar films={filmSuggest} title="Có thể bạn thích" />
           </Grid>
         </Box>
       </Box>

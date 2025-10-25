@@ -116,7 +116,7 @@ export const postFilmHistory = async (episodeId: number) => {
       episodeId 
     })
 
-    return res;
+    return res.data;
   }catch(err) {
     console.error('>>> post history fail >>> ', err)
 
