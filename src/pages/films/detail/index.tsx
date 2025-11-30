@@ -23,6 +23,7 @@ export default function DetailFilmPage() {
       setFilmTrending(films.data);
     };
 
+  // hàm call api lấy thông tin phim chi tiết
   const fetchDetailFilm = async () => {
     const res = await getDetailFilm(pathName.filmSlug ?? '');
     if(res) {
@@ -30,12 +31,11 @@ export default function DetailFilmPage() {
     }
   };
 
-  console.log('>>> film detail >>> ', filmDetail)
-
   const getFilmCategoryString = () => {
     return filmDetail?.filmCategories.map((item) => item.category.name).join(', ');
   };
 
+  // hàm call api lấy danh sách phim có thể loại tương tự
   const fetchFilmsByGenre = async () => {
     const res = await getFilmByGenre(
       filmDetail?.filmCategories[0].category.slug ?? 'hanh-dong',
@@ -68,8 +68,8 @@ export default function DetailFilmPage() {
           <Box>
             <Flex className="w-full min-h-20 bg-[#181818] p-5 gap-x-10">
               <Link
-                to={`/films/${pathName.filmSlug}/${filmDetail?.episodes[0].id}`}
-                className="block h-110 relative group"
+                to={filmDetail?.episodes?.[0]?.id ? `/films/${pathName.filmSlug}/${filmDetail?.episodes[0].id}` : '#'}
+                className="block h-110 relative group w-[308px]"
               >
                 <img
                   src={filmDetail?.thumb_url}

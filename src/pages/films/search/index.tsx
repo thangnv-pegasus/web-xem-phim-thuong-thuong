@@ -15,12 +15,14 @@ export default function SearchPage() {
   const [page, setPage] = useState(1);
   const [totalPage, setTotalPage] = useState(1);
 
+  // hàm call api lấy danh sách phim theo keywords
   const fetchFilms = async () => {
     const res = await getFilmsPagination( page, 12, params.get('keyword') ?? '');
     setFilms(res.data);
     setTotalPage(res.meta.last_page);
   };
 
+  // hàm call api lấy danh sách phim gợi ý
   const fetchFilmSuggest = async () => {
     const res = await getFilmsSuggest();
     setFilmSuggest(res);

@@ -2,14 +2,16 @@
 import { useEffect, useState } from "react";
 import { Box, Grid } from "@chakra-ui/react";
 import SideBar from "../../components/base/layout/side-bar";
-import { IBaseReponse, IFilm } from "../../types";
-import { getFilmByGenre, getFilmSeries, getFilmsPagination, getFilmTrending, getSingleFilms } from "../../services";
+import { IBaseReponse, ICountry, IFilm } from "../../types";
+import { getFilmByGenre, getFilmsByCountry, getFilmSeries, getFilmsPagination, getFilmTrending, getSingleFilms } from "../../services";
 import { v4 as uuid } from "uuid";
 import Film from "../../components/ui/film-item-card";
 import { useSearchParams } from "react-router";
 import { NAV_LINK } from "../../constants/page";
 import BasePagination from "../../components/base/pagination";
 import Loading from "../../components/base/layout/loading";
+import { getAllCategories, ICategory } from "../../services/categoties";
+import { getAllCountries } from "../../services/countries";
 
 export default function FilmsPage() {
   const [filmTrending, setFilmTrending] = useState<IFilm[]>([]);
@@ -18,26 +20,44 @@ export default function FilmsPage() {
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(1);
   const [isLoading, setIsLoading] = useState(false);
-  let pageObject;
+  let pageName;
+  const [countries, setCountries] = useState<ICountry[]>([])
+  const [categories, setCategories] = useState<ICategory[]>([])
 
-  for (const link of Object.values(NAV_LINK)) {
-    if (link.slug === params.get("type")) {
-      pageObject = link;
-      break;
-    }
+  const getCountries = async () => {
+    const res = await getAllCountries()
 
-    const child = link.child?.find(item => item.slug === params.get("type"));
-    if (child) {
-      pageObject = child;
-      break;
-    }
+    setCountries(res)
   }
+
+  const getCategories = async () => {
+    const res = await getAllCategories()
+
+    setCategories(res)
+  }
+
+  if (params.get('type') === 'phim-moi') {
+    pageName = 'Phim mới'
+  }
+  else if (params.get('type') === 'phim-bo') {
+    pageName = 'Phim bộ'
+  }
+  else if (params.get('type') === 'phim-le') {
+    pageName = 'Phim lẻ'
+  } else if (categories.find(item => item.slug === params.get('type'))) {
+    pageName = categories.find(item => item.slug === params.get('type'))?.name
+  } else if (countries.find(item => item.slug === params.get('type'))) {
+    pageName = countries.find(item => item.slug === params.get('type'))?.name
+  }
+
+  // call api lấy danh sách phim trending
   const fetchFilmTrending = async () => {
     const films = await getFilmTrending(1);
 
     setFilmTrending(films.data);
   };
 
+  // call api lấy danh sách phim mới
   const fetchNewFilms = async () => {
     const films = await getFilmsPagination(page, 12);
 
@@ -45,6 +65,7 @@ export default function FilmsPage() {
     setPageSize(films.meta.last_page);
   };
 
+  // call api lấy danh sách phim theo thể loại
   const fetchFilmsByGenre = async () => {
     let films: IBaseReponse<IFilm[]> = {
       data: [],
@@ -55,12 +76,19 @@ export default function FilmsPage() {
       },
       status: 'error'
     }
+    // nếu người dùng tìm kiếm phim lẻ thì call api lấy danh sách phim lẻ
     if (params.get('type') === 'phim-le') {
       films = await getSingleFilms(page, 12)
+      // nếu người dùng tìm phim bộ thì call api lấy danh sách phim bộ
     } else if (params.get('type') === 'phim-bo') {
       films = await getFilmSeries(page, 12);
+      // nếu người dùng tim các thể loại khác thì call api lấy danh sách phim theo thể loại
     } else {
       films = await getFilmByGenre(params.get("type") ?? "", page);
+      if (films.data.length === 0) {
+        films = await getFilmsByCountry(params.get("type") ?? "", page);
+        console.log('>>> films >>> ', films)
+      }
     }
     console.log('>>> films >>> ', films)
     setFilms(films.data);
@@ -69,6 +97,8 @@ export default function FilmsPage() {
 
   useEffect(() => {
     fetchFilmTrending();
+    getCountries()
+    getCategories()
   }, []);
 
   useEffect(() => {
@@ -99,7 +129,7 @@ export default function FilmsPage() {
       >
         <Box>
           <h1 className="text-2xl uppercase font-semibold text-primary pb-5">
-            {(pageObject as any).title || pageObject?.label}
+            {pageName}
           </h1>
           {isLoading ? (
             <Loading />

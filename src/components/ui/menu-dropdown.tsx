@@ -25,7 +25,7 @@ export default function MenuDropdown({
         </Button>
       </Menu.Trigger>
       <Menu.Positioner>
-        <Menu.Content>
+        <Menu.Content className="max-h-[300px]">
           <Grid templateColumns="repeat(3, 1fr)" gapX={4}>
             {menuItems.map((item) => {
               return (

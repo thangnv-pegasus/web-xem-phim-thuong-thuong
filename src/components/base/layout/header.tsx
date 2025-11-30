@@ -4,7 +4,7 @@ import { MdOutlineLogin } from 'react-icons/md';
 import { HiOutlineUserGroup } from 'react-icons/hi';
 import { FaHeart } from 'react-icons/fa';
 import { IoSearch } from 'react-icons/io5';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '../../../context/authContext';
 

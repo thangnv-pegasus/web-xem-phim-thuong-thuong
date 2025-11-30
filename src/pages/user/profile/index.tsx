@@ -37,6 +37,7 @@ export default function UserProfilePage() {
   const [lastPage, setLastPage] = useState(1)
   const nav = useNavigate()
 
+  // hàm call api update thông tin người dùng
   const updateUserInfo = async () => {
     try {
       const newData = await updateUser({ name })
@@ -49,6 +50,7 @@ export default function UserProfilePage() {
     }
   }
 
+  // hàm call api lấy thông tin lịch sử xem phim của người dùng
   const fetchFilmHistories = async () => {
     const res = await getFilmHistories(page, 12)
 

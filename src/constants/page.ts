@@ -195,5 +195,38 @@ const NAV_LINK: INavLink = {
     child: convertObjectToArrayNavLink(COUNTRIES),
   },
 };
+export function buildNavLink(
+  countries: { id: number; name: string; slug: string }[]
+) {
+  return {
+    NEW_FILMS: {
+      title: "Phim mới",
+      slug: "phim-moi",
+    },
+    DRAMA_FILMS: {
+      title: "Phim bộ",
+      slug: "phim-bo",
+    },
+    FEATURE_FILMS: {
+      title: "Phim lẻ",
+      slug: "phim-le",
+    },
+    GENRES: {
+      title: "Thể loại",
+      slug: "the-loai",
+      child: convertObjectToArrayNavLink(FILM_GENRES),
+    },
+    COUNTRIES: {
+      title: "Quốc gia",
+      slug: "quoc-gia",
+      child: countries.map((item) => ({
+        path: `${item.slug}`,
+        label: item.name,
+        slug: item.slug,
+      })),
+    },
+  };
+}
+
 
 export { NAV_LINK, FILM_GENRES, COUNTRIES };

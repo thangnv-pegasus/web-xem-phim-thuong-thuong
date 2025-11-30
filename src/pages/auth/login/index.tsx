@@ -34,10 +34,12 @@ export default function LoginPage() {
     formState: { errors },
   } = useForm<FormData>({ resolver: zodResolver(schema) });
 
+  // call api đăng nhập, nếu đăng nhập thành công thì di chuyển đến trang chủ, nếu thất bại thông báo lỗi
   const onSubmit = async (data: FormData) => {
     const res = await loginService(data);
 
     if (res) {
+      // nếu đăng nhập thành công, lưu thông tin đăng nhập vào local storage
       localStorage.setItem('access_token', res.access_token);
       localStorage.setItem('user', JSON.stringify(res.user));
       setUser(res.user); // ✅ cập nhật state toàn app

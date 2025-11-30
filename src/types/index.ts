@@ -96,3 +96,9 @@ interface IEpisodeItem {
   embed: string;
   m3u8: string;
 }
+
+export interface ICountry {
+  id: number;
+  name: string;
+  slug: string;
+}

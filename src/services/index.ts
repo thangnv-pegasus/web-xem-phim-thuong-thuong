@@ -67,7 +67,7 @@ export const getFilmsByCountry = async (
   country = "",
   page = 1
 ): Promise<IBaseReponse<IFilm[]>> => {
-  const { data } = await http(API_PATH.GET_FILMS_BY_COUNTRY(country, page));
+  const { data } = await http(`countries/${country}/films?page=${page}`);
 
   return data;
 };

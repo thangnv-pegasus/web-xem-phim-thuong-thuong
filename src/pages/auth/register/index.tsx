@@ -40,6 +40,7 @@ export default function RegisterPage() {
     resolver: zodResolver(schema),
   });
 
+  // call api đăng ký tài khoản, nếu đúng thì thông báo, nếu thất bại thông báo ra màn hình
   const onSubmit = async (data: FormData) => {
     const res = await registerService({
       name: data.name,
@@ -48,8 +49,9 @@ export default function RegisterPage() {
       confirm_password: data.confirm_password,
       role: ROLE.USER
     });
+    console.log('Register response:', res);
 
-    if(!!(res?.status === 200 || res?.status === 200)) {
+    if(!(res?.status === 200 || res?.status === 201 || res?.id)) {
       toast.error(res?.response?.data?.message || 'Đăng ký thất bại! Vui lòng thử lại.')
     }else {
       toast.success('Đăng ký thành công! Vui lòng đăng nhập.');

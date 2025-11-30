@@ -10,14 +10,16 @@ export default function WatchFilm() {
   const [film, setFilm] = useState<IFilmDetail>();
   const [isHistoried, setIsHistoried] = useState(false)
   const paths = useParams();
-  const {user} = useAuth()
+  const { user } = useAuth()
 
+  // hàm call api lấy thông tin chi tiết của phim
   const fetchDetailFilm = async () => {
     const res = await getDetailFilm(paths.filmSlug ?? '');
     // console.log('>>> res >>> ', res);
     setFilm(res);
   };
 
+  // hàm call api lưu lịch sử xem phim của người dùng
   const createHistoryUser = async () => {
     if (!!paths.episodeId && !!user) {
       const res = await postFilmHistory(+paths.episodeId)
@@ -48,6 +50,8 @@ export default function WatchFilm() {
                 )?.url
               }
               className="w-full h-full"
+              allow="fullscreen; accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+              allowFullScreen
               onLoad={async () => !isHistoried && await createHistoryUser()}
             />
           )}

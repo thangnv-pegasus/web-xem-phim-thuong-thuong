@@ -16,35 +16,41 @@ export default function HomePage() {
   const [dangerFilm, setDangerFilm] = useState<IFilm[]>();
   const [filmTrending, setFilmTrending] = useState<IFilm[]>();
 
+  // hàm call api lấy danh sách phim gợi ý
   const fetchFilmSuggest = async () => {
     const films = await getFilmsSuggest();
     setNewFilms(films);
   };
 
+  // hàm call api lấy danh sách phim bộ
   const fetchFilmSeries = async () => {
     const films = await getFilmSeries(1);
 
     setFilmSeries(films.data);
   };
 
+  // hàm call api lấy danh sahcs phim lẻ
   const fetchSingleFilm = async () => {
     const films = await getSingleFilms(1);
 
     setFeatureFilms(films.data);
   };
 
+  // hàm call api lấy danh sách phim hành động
   const getFilmsAction = async () => {
     const films = await getFilmByGenre('hanh-dong', 1);
 
     setActionFilm(films.data);
   };
 
+  // hàm call api lấy danh sách phim kinh dị
   const getDangerFilm = async () => {
     const films = await getFilmByGenre('kinh-di', 1);
 
     setDangerFilm(films.data);
   };
 
+  // hàm call api lấy danh sách phim trending
   const fetchFilmTrending = async () => {
     const films = await getFilmTrending(1);
 
