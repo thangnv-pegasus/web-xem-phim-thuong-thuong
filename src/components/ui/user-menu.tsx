@@ -9,7 +9,7 @@ import {
   PopoverCloseTrigger,
   Avatar,
 } from '@chakra-ui/react';
-import { LogOut, User as UserIcon } from 'lucide-react';
+import { Bookmark, BookMarked, Heart, LogOut, User as UserIcon } from 'lucide-react';
 import { useNavigate } from 'react-router';
 import { useAuth } from '../../context/authContext';
 
@@ -62,6 +62,15 @@ export default function UserAvatarMenu({ user }: { user: any }) {
                 >
                   <UserIcon size={16} />
                   Trang cá nhân
+                </Button>
+                <Button
+                  variant="ghost"
+                  size="sm"
+                  className="w-full justify-start gap-2 hover:bg-gray-800"
+                  onClick={() => nav('/wishlist')}
+                >
+                  <Bookmark size={16} />
+                  Phim yêu thích
                 </Button>
 
                 <Button

@@ -9,6 +9,7 @@ import SearchPage from "../pages/films/search"
 import HomePage from "../pages/home"
 import NotFound from "../pages/not-found"
 import UserProfilePage from "../pages/user/profile"
+import WishlistPage from "../pages/wishlist"
 
 const guestRouters = [
   {
@@ -50,6 +51,10 @@ const guestRouters = [
   {
     path: publicRoutes.user,
     component: UserProfilePage
+  },
+  {
+    path: publicRoutes.wishlist,
+    component: WishlistPage 
   },
   {
     path: '*',

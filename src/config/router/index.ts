@@ -6,6 +6,7 @@ const publicRoutes = {
   watchFilm: '/films/:filmSlug/:episodeId',
   search: '/films/search',
   user: '/user',
+  wishlist: '/wishlist',
   login: '/login',
   register: '/register',
   notFound: '/not-found',

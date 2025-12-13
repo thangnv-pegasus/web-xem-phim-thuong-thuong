@@ -1,6 +1,5 @@
-import { string } from "zod";
-
 export interface IFilm {
+  id: number;
   name: string;
   slug: string;
   original_name: string;
@@ -61,7 +60,7 @@ export interface ILinkLoop extends IBaseLink {
 }
 
 export interface IDetailFilm extends IFilm {
-  id: string;
+  id: number;
   category: ICategory;
   episodes: IEpisodeServer[];
 }

@@ -31,6 +31,7 @@ http.interceptors.response.use(
   },
   function (error) {
     if (error.status == 404) {
+      console.log('>>> redirect to not found page');
       window.location.href = "/not-found";
     }
     return Promise.reject(error);

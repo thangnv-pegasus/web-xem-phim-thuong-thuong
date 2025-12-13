@@ -13,8 +13,8 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import { loginService } from '../../../services/auth';
 import { redirect, useNavigate } from 'react-router';
 import { toast } from 'sonner';
-import { useEffect } from 'react';
 import { useAuth } from '../../../context/authContext';
+import { getWishlistByUserId } from '../../../services/films';
 
 // ✅ Schema validate
 const schema = z.object({
@@ -26,7 +26,7 @@ type FormData = z.infer<typeof schema>;
 
 export default function LoginPage() {
   const nav = useNavigate();
-  const { setUser } = useAuth(); // ✅ lấy từ context
+  const { setUser } = useAuth();
 
   const {
     register,
@@ -42,11 +42,22 @@ export default function LoginPage() {
       // nếu đăng nhập thành công, lưu thông tin đăng nhập vào local storage
       localStorage.setItem('access_token', res.access_token);
       localStorage.setItem('user', JSON.stringify(res.user));
-      setUser(res.user); // ✅ cập nhật state toàn app
-      toast.success('Đăng nhập thành công!');
+      const res2 = await getWishlistByUserId(res.user.id);
+      if (!!res2 && res2?.data?.length > 0) {
+        localStorage.setItem('wishlist', JSON.stringify(res2.data));
+      }
+
+      setUser(res.user);
+      toast.success('Đăng nhập thành công!', {
+        position: 'top-center',
+        className: 'text-green-700 bg-white'
+      });
       return nav('/');
     } else {
-      toast.error('Thông tin đăng nhập không đúng!');
+      toast.error('Thông tin đăng nhập không đúng!', {
+        position: 'top-center',
+        className: 'text-red-700 bg-white'
+      });
     }
   };
 

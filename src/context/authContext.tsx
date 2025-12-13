@@ -29,6 +29,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   const logout = async () => {
     localStorage.removeItem('user');
     localStorage.removeItem('access_token');
+    localStorage.removeItem('wishlist');
     await logoutService()
     setUser(null);
     window.location.reload

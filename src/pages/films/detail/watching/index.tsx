@@ -5,8 +5,8 @@ import { useEffect, useState } from 'react';
 import { IFilmDetail } from '../../../../types';
 import { twMerge } from 'tailwind-merge';
 import { useAuth } from '../../../../context/authContext';
-import { MessageSquareText } from 'lucide-react';
-import { getCommentsByEpisodeId, postCommentFilm } from '../../../../services/films';
+import { Heart, MessageSquareText } from 'lucide-react';
+import { getCommentsByEpisodeId, getWishlistByUserId, postCommentFilm, removeFromWishlist, saveToWishlist } from '../../../../services/films';
 import { IComment } from '../../../../types/comment';
 import UserAvatarMenu from '../../../../components/ui/user-menu';
 
@@ -16,6 +16,8 @@ export default function WatchFilm() {
   const [comments, setComments] = useState<IComment[]>([])
   const paths = useParams();
   const { user } = useAuth()
+  const [wishlists, setWishlists] = useState<IWishlist[]>([]);
+  const [isLoadingWishlist, setIsLoadingWishlist] = useState(false);
 
   // hàm call api lấy thông tin chi tiết của phim
   const fetchDetailFilm = async () => {
@@ -23,10 +25,15 @@ export default function WatchFilm() {
     setFilm(res);
   };
 
+  const fetchWishlists = async () => {
+    if (!user) return;
+    const res = await getWishlistByUserId(user.id, 1, 100);
+    setWishlists(res.data);
+  }
+
   const fetchListComment = async () => {
     if (!!paths.episodeId) {
       const res = await getCommentsByEpisodeId(+paths.episodeId, 1, 12);
-      console.log('res comments', res);
       setComments(res.data);
     };
   }
@@ -38,9 +45,79 @@ export default function WatchFilm() {
       setIsHistoried(true)
     }
   }
+
+  console.log('>>> wishlists', wishlists);
+
+  const saveWishlist = async () => {
+    try {
+      if (!user) {
+        alert('Vui lòng đăng nhập để sử dụng chức năng này');
+        return;
+      }
+      if (!film) return;
+      const res = await saveToWishlist(film.id, user.id);
+
+      if (res?.id) {
+        toast.success('Đã thêm vào danh sách yêu thích', {
+          position: 'top-center',
+          className: 'text-green-700 bg-white'
+        });
+      } else {
+        toast.error('Thêm vào danh sách yêu thích thất bại, vui lòng thử lại', {
+          position: 'top-center',
+          className: 'text-red-700 bg-white'
+        });
+      }
+    } catch (error) {
+      toast.error('Thêm vào danh sách yêu thích thất bại, vui lòng thử lại', {
+        position: 'top-center',
+        className: 'text-red-700 bg-white'
+      });
+    }
+  }
+
+  const deleteWishlist = async () => {
+    try {
+      if (!user) {
+        alert('Vui lòng đăng nhập để sử dụng chức năng này');
+        return;
+      }
+      if (!film) return;
+      const res = await removeFromWishlist(film.id, user.id);
+      if (res?.id) {
+        toast.success('Đã xóa khỏi danh sách yêu thích', {
+          position: 'top-center',
+          className: 'text-green-700 bg-white'
+        });
+      }
+    } catch (error) {
+      toast.error('Xóa khỏi danh sách yêu thích thất bại, vui lòng thử lại', {
+        position: 'top-center',
+        className: 'text-red-700 bg-white'
+      });
+    }
+  }
+
+  const toggleWishlist = async () => {
+    try {
+      setIsLoadingWishlist(true);
+      if (wishlists?.find(item => item.film_id === film?.id)) {
+        await deleteWishlist();
+      } else {
+        await saveWishlist();
+      }
+    } catch (error) {
+      console.log('error wishlist', error);
+    } finally {
+      setIsLoadingWishlist(false);
+      fetchWishlists();
+    }
+  }
+
   useEffect(() => {
     fetchDetailFilm();
     fetchListComment();
+    fetchWishlists();
   }, [paths.filmSlug]);
 
   useEffect(() => {
@@ -69,9 +146,18 @@ export default function WatchFilm() {
           )}
         </Box>
         <Box>
-          <Text className="text-primary uppercase text-2xl font-semibold py-3 mt-4 border-b-2 border-dashed border-[#383737]">
-            Tập phim
-          </Text>
+          <Box className='flex items-center justify-between py-3 mt-4 border-b-2 border-dashed border-[#383737]'>
+            <Text className="text-primary uppercase text-2xl font-semibold">
+              Tập phim
+            </Text>
+            <Button
+              className={twMerge('bg-transparent text-white', wishlists?.find(item => item.film_id === film?.id) && 'text-primary')}
+              onClick={toggleWishlist}
+              loading={isLoadingWishlist}
+            >
+              <Heart />
+            </Button>
+          </Box>
           <Grid
             gridTemplateColumns={'repeat(14, 1fr)'}
             gap={4}
@@ -135,6 +221,8 @@ import {
 } from "@chakra-ui/react";
 import { toast } from 'sonner';
 import dayjs from 'dayjs';
+import { IWishlist } from '../../../../types/wishlist';
+import { ca } from 'zod/v4/locales';
 
 function CommentForm({ episodeId }: { episodeId: number }) {
   const [comment, setComment] = useState("");
@@ -197,10 +285,6 @@ function CommentForm({ episodeId }: { episodeId: number }) {
         >
           Gửi bình luận
         </Button>
-
-        <p className="text-sm text-gray-400 mt-2">
-          * Không cần đăng nhập. Bình luận vi phạm chính sách sẽ bị xoá.
-        </p>
       </form>
     </Box>
   );
